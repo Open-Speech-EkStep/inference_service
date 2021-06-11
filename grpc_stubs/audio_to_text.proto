@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package recognize;
+
+service Recognize {
+   rpc recognize_audio(stream Message) returns (stream Response) {}
+   rpc recognize_audio_file_mode(stream FileUploadMessage) returns (stream Response) {}
+}
+
+message Message {
+  bytes audio = 1;
+  string user = 2;
+  string language = 3;
+  bool speaking = 4;
+  bool isEnd = 5;
+}
+
+message FileUploadMessage {
+  bytes audio = 1;
+  string user = 2;
+  string language = 3;
+  string filename = 4;
+}
+
+message Response {
+    string transcription = 1;
+    string user = 2;
+    string language = 3;
+    string action = 4;
+}

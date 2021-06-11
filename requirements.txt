@@ -3,3 +3,5 @@ pydub
 webrtcvad
 tqdm
 torchaudio==0.7.2
+grpcio-tools==1.32.0
+grpcio==1.32.0

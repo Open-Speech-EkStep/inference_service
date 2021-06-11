@@ -54,8 +54,10 @@ class ModelService:
         )
 
         result = self.apply_punctuation_and_itn(result, model_item, enable_punctuation, enable_inverse_text_normalization)
-
-        return result
+        response = {}
+        response['transcription'] = result
+        response['status'] = 'OK'
+        return response 
 
     def get_srt(self, file_name, language_code, enable_punctuation = False, enable_inverse_text_normalization = False):
         model_item = self.model_items[language_code]
