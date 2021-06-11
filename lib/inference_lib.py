@@ -277,6 +277,21 @@ def get_feature(filepath):
     feats = postprocess(feats, sample_rate)
     return feats
 
+def get_feature_for_bytes(wav, sample_rate):
+    def postprocess(feats, sample_rate):
+        if feats.dim == 2:
+            feats = feats.mean(-1)
+
+        assert feats.dim() == 1, feats.dim()
+
+        with torch.no_grad():
+            feats = F.layer_norm(feats, feats.shape)
+        return feats
+
+    feats = torch.from_numpy(wav).float()
+    feats = postprocess(feats, sample_rate)
+    return feats
+
 def post_process(sentence: str, symbol: str):
     if symbol == "sentencepiece":
         sentence = sentence.replace(" ", "").replace("\u2581", " ").strip()

@@ -1,8 +1,9 @@
-from inference_lib import load_model_and_generator, get_results
+from lib.inference_lib import load_model_and_generator, get_results
 import json
 from model_item import ModelItem
 from punctuate.punctuate_text import Punctuation
 from inverse_text_normalization.run_predict import inverse_normalize_text
+from srt.subtitle_generator import get_srt
 
 class ModelService:
 
@@ -54,15 +55,28 @@ class ModelService:
 
         result = self.apply_punctuation_and_itn(result, model_item, enable_punctuation, enable_inverse_text_normalization)
 
-        
+        return result
+
+    def get_srt(self, file_name, language_code, enable_punctuation = False, enable_inverse_text_normalization = False):
+        model_item = self.model_items[language_code]
+        model = model_item.get_model()
+        generator = model_item.get_generator()
+
+        dict_file_path = model_item.get_dict_file_path()
+        lm_path = model_item.get_language_model_path()
+        result = get_srt(file_name, model, generator, dict_file_path, '/home/nireshkumarr/inference-wrapper/denoiser', language = language_code, half = False)
+
+        result = self.apply_punctuation_and_itn(result, model_item, enable_punctuation, enable_inverse_text_normalization)
+
         return result
          
         
 
 if __name__ == "__main__":
-    from inference_lib import Wav2VecCtc
+    from lib.inference_lib import Wav2VecCtc
     with open('model_config.json','r') as f:
         model_config = json.load(f)
-    model_service = ModelService(model_config, 'kenlm', True, True)
-    result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/indian_english/741_3365file-ideleoSHW2Gd0.wav", 'en-IN')
+    model_service = ModelService(model_config, 'kenlm', True, False)
+    # result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
+    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', False, True)
     print(result)
