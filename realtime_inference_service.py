@@ -5,7 +5,7 @@ from concurrent import futures
 import time
 import grpc
 import subprocess
-from grpc_stubs.audio_to_text_pb2 import Response, SRTResponse
+from grpc_stubs.audio_to_text_pb2 import Response, SRTResponse, PunctuateResponse
 from grpc_stubs.audio_to_text_pb2_grpc import add_RecognizeServicer_to_server, RecognizeServicer
 from model_service import ModelService
 from lib.inference_lib import Wav2VecCtc
@@ -50,11 +50,13 @@ class RecognizeAudioServicer(RecognizeServicer):
                         language=request.language)
 
     def recognize_srt(self, request, context):
-        print("CALLED", request.filename, request.user, request.language)
         file_name = self.write_to_file(request.filename, request.audio)
-        response = self.inference.get_srt(file_name, request.language)
+        response = self.inference.get_srt(file_name, request.language, True, True)
         return SRTResponse(srt=response, user = request.user, language = request.language)
 
+    def punctuate(self, request, context):
+        response = self.inference.punctuate(request.text, request.language, request.enabledItn)
+        return PunctuateResponse(text=response,  language= request.language)
 
     def clear_buffers(self, user):
         if user in self.client_buffers:

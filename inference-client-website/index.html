@@ -29,6 +29,50 @@
             resize: vertical;
         }
 
+        .icon-container {
+            position: absolute;
+            right: 20px;
+            top: calc(10% - 10px);
+        }
+        .output-loader {
+            position: relative;
+            height: 20px;
+            width: 20px;
+            display: inline-block;
+            animation: around 5.4s infinite;
+        }
+
+        @keyframes around {
+            0% {
+                transform: rotate(0deg)
+            }
+            100% {
+                transform: rotate(360deg)
+            }
+        }
+
+        .output-loader::after, .output-loader::before {
+            content: "";
+            background: white;
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            border-width: 2px;
+            border-color: #333 #333 transparent transparent;
+            border-style: solid;
+            border-radius: 20px;
+            box-sizing: border-box;
+            top: 0;
+            left: 0;
+            animation: around 0.7s ease-in-out infinite;
+        }
+
+        .output-loader::after {
+            animation: around 0.7s ease-in-out 0.1s infinite;
+            background: transparent;
+        }
+
         .disclaimer {
             font-size: 14px;
         }
@@ -240,7 +284,12 @@
                     </center>
                 </div>
                 <div class="col-sm-12">
-                    <textarea id="output" placeholder="Output" rows="6" readonly></textarea>
+                    <div class="outputcontainer">
+                        <textarea id="output" placeholder="Output" rows="6" readonly></textarea>
+                        <div class="icon-container" id ='output-loader-icon' style='display: none;'>
+                            <i class="output-loader"></i>
+                        </div>
+                    </div>
                     <br />
                     <p class="disclaimer"><strong>Disclaimer :</strong> Transcription is best if you directly speak into
                         the microphone and the performance might not be the same if you use it over a conference call.
@@ -675,6 +724,7 @@
             // }, 1000);
             $('#audio_sample_id').show();
             enableRating(true);
+            punctuateText(transcription_text);
         }
 
         function stateOnMicStart() {
@@ -1015,6 +1065,35 @@
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert('Failed: ' + textStatus);
                     $('#file-loader').hide();
+                }
+
+            });
+        }
+
+        function punctuateText(textToPunctuate) {
+            let formData = new FormData();
+            formData.append("text", textToPunctuate);
+            formData.append("language", current_lang);
+            $.ajax({
+                type: 'POST',
+                url: '/punctuate',
+                data: formData,
+                contentType: false,
+                processData: false,
+                crossDomain: true,
+                beforeSend: function () {
+                    // Show image container
+                    $('#output-loader-icon').show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    const resp = response["data"];
+                    console.log(resp['text']);
+                    $('#output-loader-icon').hide();
+                    document.getElementById('output').textContent = resp["text"];
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Failed: ' + textStatus);
+                    $('#output-loader-icon').hide();
                 }
 
             });

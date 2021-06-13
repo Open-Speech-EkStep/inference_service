@@ -6,6 +6,7 @@ service Recognize {
    rpc recognize_audio(stream Message) returns (stream Response) {}
    rpc recognize_audio_file_mode(stream FileUploadMessage) returns (stream Response) {}
    rpc recognize_srt (SRTRequest) returns (SRTResponse) {}
+   rpc punctuate(PunctuateRequest) returns (PunctuateResponse) {}
 }
 
 message Message {
@@ -41,4 +42,15 @@ message Response {
     string user = 2;
     string language = 3;
     string action = 4;
+}
+
+message PunctuateRequest {
+  string text = 1;
+  string language = 2;
+  bool enabledItn = 3;
+}
+
+message PunctuateResponse {
+  string text = 1;
+  string language = 2;
 }

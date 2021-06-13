@@ -29,6 +29,11 @@ class RecognizeStub(object):
                 request_serializer=audio__to__text__pb2.SRTRequest.SerializeToString,
                 response_deserializer=audio__to__text__pb2.SRTResponse.FromString,
                 )
+        self.punctuate = channel.unary_unary(
+                '/recognize.Recognize/punctuate',
+                request_serializer=audio__to__text__pb2.PunctuateRequest.SerializeToString,
+                response_deserializer=audio__to__text__pb2.PunctuateResponse.FromString,
+                )
 
 
 class RecognizeServicer(object):
@@ -52,6 +57,12 @@ class RecognizeServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def punctuate(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_RecognizeServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -69,6 +80,11 @@ def add_RecognizeServicer_to_server(servicer, server):
                     servicer.recognize_srt,
                     request_deserializer=audio__to__text__pb2.SRTRequest.FromString,
                     response_serializer=audio__to__text__pb2.SRTResponse.SerializeToString,
+            ),
+            'punctuate': grpc.unary_unary_rpc_method_handler(
+                    servicer.punctuate,
+                    request_deserializer=audio__to__text__pb2.PunctuateRequest.FromString,
+                    response_serializer=audio__to__text__pb2.PunctuateResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -128,5 +144,22 @@ class Recognize(object):
         return grpc.experimental.unary_unary(request, target, '/recognize.Recognize/recognize_srt',
             audio__to__text__pb2.SRTRequest.SerializeToString,
             audio__to__text__pb2.SRTResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def punctuate(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/recognize.Recognize/punctuate',
+            audio__to__text__pb2.PunctuateRequest.SerializeToString,
+            audio__to__text__pb2.PunctuateResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

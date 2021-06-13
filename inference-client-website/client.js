@@ -130,6 +130,15 @@ function startServer() {
           });
     }
 
+    const getPunctuation =  (grpc_client, msg) => {
+        return new Promise((resolve, reject) => {
+            grpc_client.punctuate(msg, (error, response) => {
+                    if (error) { reject(error); }
+                    resolve(response);
+                });
+          });
+    }
+
     app.post("/batch-service", function(req,res){
         const file = req.file;
         const { language, user} = req.body;
@@ -162,6 +171,27 @@ function startServer() {
             });
         })
     });
+
+    app.post("/punctuate", (req, res)=>{
+        const {text, language } = req.body;
+        let grpc_client = new proto.Recognize(
+            'localhost:55102',
+            grpc.credentials.createInsecure()
+        );
+        const msg = {
+            text: text,
+            language: language,
+            enabledItn: true
+        }
+        getPunctuation(grpc_client, msg).then(response=>{
+            res.json({"data": response});
+        }).catch(error=>{
+            console.log(error);
+            res.sendStatus(500);
+        }).finally(()=>{
+            grpc.closeClient(grpc_client);
+        })
+    })
 
     app.post("/api/feedback", function (req, res) {
         const file = req.file;

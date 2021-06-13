@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13\x61udio_to_text.proto\x12\trecognize\"Y\n\x07Message\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08speaking\x18\x04 \x01(\x08\x12\r\n\x05isEnd\x18\x05 \x01(\x08\"M\n\nSRTRequest\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\":\n\x0bSRTResponse\x12\x0b\n\x03srt\x18\x01 \x01(\t\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\"T\n\x11\x46ileUploadMessage\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\"Q\n\x08Response\x12\x15\n\rtranscription\x18\x01 \x01(\t\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x04 \x01(\t2\xe5\x01\n\tRecognize\x12@\n\x0frecognize_audio\x12\x12.recognize.Message\x1a\x13.recognize.Response\"\x00(\x01\x30\x01\x12T\n\x19recognize_audio_file_mode\x12\x1c.recognize.FileUploadMessage\x1a\x13.recognize.Response\"\x00(\x01\x30\x01\x12@\n\rrecognize_srt\x12\x15.recognize.SRTRequest\x1a\x16.recognize.SRTResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x13\x61udio_to_text.proto\x12\trecognize\"Y\n\x07Message\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08speaking\x18\x04 \x01(\x08\x12\r\n\x05isEnd\x18\x05 \x01(\x08\"M\n\nSRTRequest\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\":\n\x0bSRTResponse\x12\x0b\n\x03srt\x18\x01 \x01(\t\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\"T\n\x11\x46ileUploadMessage\x12\r\n\x05\x61udio\x18\x01 \x01(\x0c\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x10\n\x08\x66ilename\x18\x04 \x01(\t\"Q\n\x08Response\x12\x15\n\rtranscription\x18\x01 \x01(\t\x12\x0c\n\x04user\x18\x02 \x01(\t\x12\x10\n\x08language\x18\x03 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x04 \x01(\t\"F\n\x10PunctuateRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x10\n\x08language\x18\x02 \x01(\t\x12\x12\n\nenabledItn\x18\x03 \x01(\x08\"3\n\x11PunctuateResponse\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x10\n\x08language\x18\x02 \x01(\t2\xaf\x02\n\tRecognize\x12@\n\x0frecognize_audio\x12\x12.recognize.Message\x1a\x13.recognize.Response\"\x00(\x01\x30\x01\x12T\n\x19recognize_audio_file_mode\x12\x1c.recognize.FileUploadMessage\x1a\x13.recognize.Response\"\x00(\x01\x30\x01\x12@\n\rrecognize_srt\x12\x15.recognize.SRTRequest\x1a\x16.recognize.SRTResponse\"\x00\x12H\n\tpunctuate\x12\x1b.recognize.PunctuateRequest\x1a\x1c.recognize.PunctuateResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -289,11 +289,98 @@ _RESPONSE = _descriptor.Descriptor(
   serialized_end=431,
 )
 
+
+_PUNCTUATEREQUEST = _descriptor.Descriptor(
+  name='PunctuateRequest',
+  full_name='recognize.PunctuateRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='text', full_name='recognize.PunctuateRequest.text', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='language', full_name='recognize.PunctuateRequest.language', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='enabledItn', full_name='recognize.PunctuateRequest.enabledItn', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=433,
+  serialized_end=503,
+)
+
+
+_PUNCTUATERESPONSE = _descriptor.Descriptor(
+  name='PunctuateResponse',
+  full_name='recognize.PunctuateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='text', full_name='recognize.PunctuateResponse.text', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='language', full_name='recognize.PunctuateResponse.language', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=505,
+  serialized_end=556,
+)
+
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
 DESCRIPTOR.message_types_by_name['SRTRequest'] = _SRTREQUEST
 DESCRIPTOR.message_types_by_name['SRTResponse'] = _SRTRESPONSE
 DESCRIPTOR.message_types_by_name['FileUploadMessage'] = _FILEUPLOADMESSAGE
 DESCRIPTOR.message_types_by_name['Response'] = _RESPONSE
+DESCRIPTOR.message_types_by_name['PunctuateRequest'] = _PUNCTUATEREQUEST
+DESCRIPTOR.message_types_by_name['PunctuateResponse'] = _PUNCTUATERESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Message = _reflection.GeneratedProtocolMessageType('Message', (_message.Message,), {
@@ -331,6 +418,20 @@ Response = _reflection.GeneratedProtocolMessageType('Response', (_message.Messag
   })
 _sym_db.RegisterMessage(Response)
 
+PunctuateRequest = _reflection.GeneratedProtocolMessageType('PunctuateRequest', (_message.Message,), {
+  'DESCRIPTOR' : _PUNCTUATEREQUEST,
+  '__module__' : 'audio_to_text_pb2'
+  # @@protoc_insertion_point(class_scope:recognize.PunctuateRequest)
+  })
+_sym_db.RegisterMessage(PunctuateRequest)
+
+PunctuateResponse = _reflection.GeneratedProtocolMessageType('PunctuateResponse', (_message.Message,), {
+  'DESCRIPTOR' : _PUNCTUATERESPONSE,
+  '__module__' : 'audio_to_text_pb2'
+  # @@protoc_insertion_point(class_scope:recognize.PunctuateResponse)
+  })
+_sym_db.RegisterMessage(PunctuateResponse)
+
 
 
 _RECOGNIZE = _descriptor.ServiceDescriptor(
@@ -340,8 +441,8 @@ _RECOGNIZE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=434,
-  serialized_end=663,
+  serialized_start=559,
+  serialized_end=862,
   methods=[
   _descriptor.MethodDescriptor(
     name='recognize_audio',
@@ -370,6 +471,16 @@ _RECOGNIZE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_SRTREQUEST,
     output_type=_SRTRESPONSE,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='punctuate',
+    full_name='recognize.Recognize.punctuate',
+    index=3,
+    containing_service=None,
+    input_type=_PUNCTUATEREQUEST,
+    output_type=_PUNCTUATERESPONSE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

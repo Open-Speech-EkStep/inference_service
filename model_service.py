@@ -72,6 +72,10 @@ class ModelService:
 
         return result
          
+    def punctuate(self, text_to_punctuate, language_code, enable_inverse_text_normalization = False):
+        model_item = self.model_items[language_code]
+        result = self.apply_punctuation_and_itn(text_to_punctuate, model_item, True, enable_inverse_text_normalization)
+        return result
         
 
 if __name__ == "__main__":
