@@ -52,6 +52,8 @@ class RecognizeAudioServicer(RecognizeServicer):
     def recognize_srt(self, request, context):
         file_name = self.write_to_file(request.filename, request.audio)
         response = self.inference.get_srt(file_name, request.language, True, True)
+        if os.path.exists(file_name):
+            os.remove(file_name)
         return SRTResponse(srt=response, user = request.user, language = request.language)
 
     def punctuate(self, request, context):
@@ -110,7 +112,7 @@ class RecognizeAudioServicer(RecognizeServicer):
         index = data.user + count
         user = data.user
         file_name = self.write_wave_to_file(index + ".wav", buffer)
-        # result = {"transcription":"hello", 'status':'OK'}
+
         result = self.inference.get_inference(file_name, data.language, False, False)
         if user not in self.client_transcription:
             self.client_transcription[user] = ""
@@ -123,7 +125,9 @@ class RecognizeAudioServicer(RecognizeServicer):
                     local_file.write(result['transcription'])
         result["id"] = index
         print(user, "responsed")
+
         os.remove(file_name)
+
         if result['status'] != "OK":
             result["success"] = False
         else:
