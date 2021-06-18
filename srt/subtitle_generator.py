@@ -37,7 +37,7 @@ def get_srt(file_name, model, generator, dict_path, denoiser_path, audio_thresho
     noise_suppression(dir_name, denoiser_path)
     audio_file = dir_name + '/clipped_audio_enhanced.wav'
 
-    result = generate_srt(wav_path=audio_file, language=language, model=model, generator=generator, cuda=torch.cuda.is_available(), dict_path=dict_path, half=False)
+    result = generate_srt(wav_path=audio_file, language=language, model=model, generator=generator, cuda=torch.cuda.is_available(), dict_path=dict_path, half=half)
     return result
 
 #subtitle_generation('/home/nireshkumarr/test_vad/ravish_short.mp3', audio_threshold=1, language='en-IN')

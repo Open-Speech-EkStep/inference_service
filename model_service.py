@@ -66,7 +66,7 @@ class ModelService:
 
         dict_file_path = model_item.get_dict_file_path()
         lm_path = model_item.get_language_model_path()
-        result_arr = get_srt(file_name, model, generator, dict_file_path, '/home/nireshkumarr/inference-wrapper/denoiser', audio_threshold= 15, language = language_code, half = False)
+        result_arr = get_srt(file_name, model, generator, dict_file_path, '/home/nireshkumarr/inference-wrapper/denoiser', audio_threshold= 15, language = language_code, half = self.half)
         srt_string = ''
         for result in result_arr:
             res = result[0]
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     from lib.inference_lib import Wav2VecCtc
     with open('model_config.json','r') as f:
         model_config = json.load(f)
-    model_service = ModelService(model_config, 'kenlm', True, False)
+    model_service = ModelService(model_config, 'kenlm', True, True)
     # result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
-    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/shashi.mp3", 'en-IN', True, True)
+    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
     print(result)
