@@ -231,8 +231,9 @@
                         Recognition Models </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/indian-english">English (IN)</a>
-                        <!-- <a class="dropdown-item" href="/gujarati">Gujarati</a>
                         <a class="dropdown-item" href="/hindi">Hindi</a>
+                        <!-- <a class="dropdown-item" href="/gujarati">Gujarati</a>
+                        
                         <a class="dropdown-item" href="/kannada">Kannada</a>
                         <a class="dropdown-item" href="/kannada-lm">Kannada (With LM)</a>
                         <a class="dropdown-item" href="/odia">Odia</a>
@@ -425,9 +426,10 @@
             if (language === "indian-english") {
                 return "en-IN";
             }
-            //  else if (language === "hindi") {
-            //     return "hi";
-            // } else if (language === "tamil") {
+             else if (language === "hindi") {
+                return "hi";
+            } 
+            //else if (language === "tamil") {
             //     return "ta";
             // } else if (language === "telugu") {
             //     return "te";
@@ -438,7 +440,7 @@
             // } else if (language === "odia") {
             //     return "or";
             // }
-             else {
+            else {
                 return "en-IN";
             }
         }

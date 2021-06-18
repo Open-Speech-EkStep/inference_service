@@ -1,3 +1,4 @@
 {
-    "en-IN": "/home/nireshkumarr/inference-wrapper/files/indian_english/final_model.pt"
+    "en-IN": "/home/nireshkumarr/inference-wrapper/files/indian_english/final_model.pt",
+    "hi": "/home/nireshkumarr/inference-wrapper/files/hindi/hindi.pt"
 }

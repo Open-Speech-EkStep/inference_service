@@ -91,6 +91,14 @@ if __name__ == "__main__":
     with open('model_config.json','r') as f:
         model_config = json.load(f)
     model_service = ModelService(model_config, 'kenlm', True, True)
+    
+
+
     # result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
-    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
+    # result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
+    
+    result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/hindi/chunk_04.wav", 'hi', True, True)
+    # result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/hindi/file1.wav", 'hi', True, True)
+
+    
     print(result)

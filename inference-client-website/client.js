@@ -105,7 +105,7 @@ function startServer() {
     const upload = multer({ storage: multerStorage });
     app.use(upload.single('audio_data'));
     app.get("/", function (req, res) {
-        res.redirect("/indian-english");
+        res.redirect("/hindi");
     });
 
     app.get("/feedback", function (req, res) {
@@ -113,7 +113,7 @@ function startServer() {
     });
 
     // const LANGUAGES = ['hindi', 'indian-english', 'tamil', 'telugu', 'kannada', 'kannada-lm', 'odia', 'gujarati'];
-    const LANGUAGES = ['indian-english'];
+    const LANGUAGES = ['hindi', 'indian-english'];
     app.get("/:language", function (req, res) {
         const language = req.params.language;
         if (LANGUAGES.includes(language.toLowerCase())) {
