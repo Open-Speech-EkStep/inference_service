@@ -155,3 +155,6 @@ Thumbs.db
 
 files/
 denoiser/
+model_data/
+nohups/
+nohup.out
