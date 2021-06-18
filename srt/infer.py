@@ -59,8 +59,10 @@ def generate_srt(wav_path, language, model, generator, cuda, dict_path, half = F
     start_time, end_time = extract_time_stamps(wav_path)
     original_file_path = wav_path.replace('clipped_audio_enhanced', 'clipped_audio')
     original_chunk = AudioSegment.from_wav(original_file_path)
-    result = ''
+    rst = ''
+    result_obj = [] 
     for i in tqdm(range(len(start_time))):
+        result = ''
         if end_time[i] - start_time[i] > 80:
             result+=str(i+1)
             result+='\n'
@@ -80,11 +82,18 @@ def generate_srt(wav_path, language, model, generator, cuda, dict_path, half = F
         result+=' --> '
         result+=str( formatSrtTime(end_time[i]))
         result+='\n'
+
         response = get_results_from_chunks(wav_data=features, dict_path=dict_path, generator=generator, use_cuda=cuda, model=model, half = half)
         if language=='en-IN':
             response = response.lower()
-        aligned_response = response_alignment(response, num_words_per_line=25)
-        result+='\n'.join(aligned_response)
-        result+='\n\n'
-    return result
+        
+        # aligned_response = response_alignment(response, num_words_per_line=25)
+        # result_end+='\n'.join(aligned_response)
+        valid = True
+        if len(response.rstrip().lstrip()) == 0:
+            response = "[ Voice is not clearly audible ]"    
+            valid = False    
+        result_end = '\n\n'
+        result_obj.append([result, response, result_end, valid])
+    return result_obj
 

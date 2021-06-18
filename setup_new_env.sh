@@ -1,6 +1,6 @@
 #!/bin/sh
 
-conda create --name fairseq python=3.7 -y
+conda create --name fairseq3 python=3.7 -y
 conda activate fairseq
 
 sudo apt-get install liblzma-dev libbz2-dev libzstd-dev libsndfile1-dev libopenblas-dev libfftw3-dev libgflags-dev libgoogle-glog-dev
@@ -26,8 +26,9 @@ make -j 16
 cd ..
 export KENLM_ROOT=$PWD
 cd ..
-
-git clone https://github.com/flashlight/flashlight.git
+if [ ! -d flashlight ]; then
+  git clone https://github.com/flashlight/flashlight.git
+fi
 cd flashlight/bindings/python
 export USE_MKL=0
 python setup.py install
@@ -37,7 +38,7 @@ pip install git+https://github.com/Open-Speech-EkStep/indic-punct.git#egg=indic-
 conda install -c conda-forge pynini==2.1.4 -y
 conda install libgcc gmp
 pip install Cython
-pip install nemo_toolkit[all]==v1.0.0
+pip install nemo_toolkit['all']==v1.0.2
 
 if [ ! -d denoiser ]; then
   git clone https://github.com/facebookresearch/denoiser.git

@@ -4,6 +4,7 @@ from model_item import ModelItem
 from punctuate.punctuate_text import Punctuation
 from inverse_text_normalization.run_predict import inverse_normalize_text
 from srt.subtitle_generator import get_srt
+from srt.infer import response_alignment
 
 class ModelService:
 
@@ -30,14 +31,13 @@ class ModelService:
 
     def apply_punctuation_and_itn(self, result, model_item, enable_punctuation, enable_inverse_text_normalization):
         language_code = model_item.get_language_code()
-        if enable_punctuation:
-            punctuation_response = model_item.get_puncutation_model().punctuate_text([result])
-            result = punctuation_response[0]
-            
         if enable_inverse_text_normalization:
             language_code = 'en' if language_code == 'en-IN' else language_code
             itn_response = inverse_normalize_text([result],lang=language_code)
             result = itn_response[0]
+        if enable_punctuation:
+            punctuation_response = model_item.get_puncutation_model().punctuate_text([result])
+            result = punctuation_response[0]
         
         return result
 
@@ -66,11 +66,19 @@ class ModelService:
 
         dict_file_path = model_item.get_dict_file_path()
         lm_path = model_item.get_language_model_path()
-        result = get_srt(file_name, model, generator, dict_file_path, '/home/nireshkumarr/inference-wrapper/denoiser', language = language_code, half = False)
-
-        result = self.apply_punctuation_and_itn(result, model_item, enable_punctuation, enable_inverse_text_normalization)
-
-        return result
+        result_arr = get_srt(file_name, model, generator, dict_file_path, '/home/nireshkumarr/inference-wrapper/denoiser', audio_threshold= 15, language = language_code, half = False)
+        srt_string = ''
+        for result in result_arr:
+            res = result[0]
+            if result[3]:
+                resp = self.apply_punctuation_and_itn(result[1], model_item, enable_punctuation, enable_inverse_text_normalization)
+                aligned_response = response_alignment(resp, num_words_per_line=25)
+                res+='\n'.join(aligned_response)
+            else:
+                res+=result[1]
+            res+= result[2]
+            srt_string += res
+        return srt_string
          
     def punctuate(self, text_to_punctuate, language_code, enable_inverse_text_normalization = False):
         model_item = self.model_items[language_code]
@@ -84,5 +92,5 @@ if __name__ == "__main__":
         model_config = json.load(f)
     model_service = ModelService(model_config, 'kenlm', True, False)
     # result = model_service.get_inference("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', True, True)
-    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/indian_english/file1.wav", 'en-IN', False, True)
+    result = model_service.get_srt("/home/nireshkumarr/inference-wrapper/files/shashi.mp3", 'en-IN', True, True)
     print(result)

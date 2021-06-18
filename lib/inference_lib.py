@@ -9,6 +9,7 @@ from fairseq.models import BaseFairseqModel
 from fairseq.data import Dictionary
 from fairseq.models.wav2vec.wav2vec2_asr import Wav2VecEncoder, Wav2Vec2CtcConfig
 from fairseq.dataclass.utils import convert_namespace_to_omegaconf
+from lib.audio_normalization import AudioNormalization
 
 try:
     from flashlight.lib.text.dictionary import create_word_dict, load_words
@@ -310,7 +311,11 @@ def post_process(sentence: str, symbol: str):
 def get_results(wav_path,dict_path,generator,use_cuda=False,w2v_path=None,model=None, half=None):
     sample = dict()
     net_input = dict()
-    feature = get_feature(wav_path)
+
+    normalized_audio = AudioNormalization(wav_path).loudness_normalization_effects()
+    wav = np.array(normalized_audio.get_array_of_samples()).astype('float64')
+
+    feature = get_feature_for_bytes(wav, 16000)
     target_dict = Dictionary.load(dict_path)
  
     model.eval()

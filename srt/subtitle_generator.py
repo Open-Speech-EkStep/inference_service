@@ -14,8 +14,9 @@ def media_conversion(file_name, duration_limit=5):
 
     audio_duration_min = audio_file.duration_seconds / 60
 
-    if audio_duration_min > 5:
-        clipped_audio = audio_file[:300000]
+    if audio_duration_min > duration_limit:
+        d_limit = duration_limit * 60 * 1000
+        clipped_audio = audio_file[:d_limit]
         clipped_audio.export(dir_name + '/clipped_audio.wav', format='wav')
     else:
         audio_file.export(dir_name + '/clipped_audio.wav', format='wav')

@@ -1,6 +1,8 @@
 "use strict";
 require('dotenv').config();
 const grpc = require("grpc");
+grpc.max_send_message_length = 50 * 1024 * 1024;
+// grpc.max_receive_message_length = 50 * 1024 * 1024;
 var express = require("express");
 const app = express();
 app.use(express.json());
