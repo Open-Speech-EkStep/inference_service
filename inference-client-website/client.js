@@ -113,7 +113,7 @@ function startServer() {
     });
 
     // const LANGUAGES = ['hindi', 'indian-english', 'tamil', 'telugu', 'kannada', 'kannada-lm', 'odia', 'gujarati'];
-    const LANGUAGES = ['hindi', 'indian-english'];
+    const LANGUAGES = ['hindi', 'indian-english', 'tamil', 'bengali', 'nepali'];
     app.get("/:language", function (req, res) {
         const language = req.params.language;
         if (LANGUAGES.includes(language.toLowerCase())) {

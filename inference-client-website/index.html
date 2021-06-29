@@ -232,13 +232,16 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="/indian-english">English (IN)</a>
                         <a class="dropdown-item" href="/hindi">Hindi</a>
+                        <a class="dropdown-item" href="/tamil">Tamil</a>
+                        <a class="dropdown-item" href="/bengali">Bengali</a>
+                        <a class="dropdown-item" href="/nepali">Nepali</a>
                         <!-- <a class="dropdown-item" href="/gujarati">Gujarati</a>
                         
                         <a class="dropdown-item" href="/kannada">Kannada</a>
                         <a class="dropdown-item" href="/kannada-lm">Kannada (With LM)</a>
                         <a class="dropdown-item" href="/odia">Odia</a>
                         <a class="dropdown-item" href="/telugu">Telugu</a>
-                        <a class="dropdown-item" href="/tamil">Tamil</a> -->
+                         -->
                     </div>
                 </li>
                 <li class="nav-item p-2"><a href="https://vakyansh.in/about-us"
@@ -429,9 +432,16 @@
              else if (language === "hindi") {
                 return "hi";
             } 
-            //else if (language === "tamil") {
-            //     return "ta";
-            // } else if (language === "telugu") {
+            else if (language === "tamil") {
+                return "ta";
+            }
+            else if (language === "bengali"){
+                return "bn";
+            }
+            else if (language === "nepali"){
+                return "ne";
+            }
+            // else if (language === "telugu") {
             //     return "te";
             // } else if (language === "gujarati") {
             //     return "gu";
