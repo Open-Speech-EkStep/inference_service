@@ -1,7 +1,9 @@
 {
     "en-IN": "/home/nireshkumarr/inference-wrapper/files/indian_english/final_model.pt",
+    "en-IN-BIO": "/home/nireshkumarr/inference-wrapper/files/indian_english_bio/final_model.pt",
     "hi": "/home/nireshkumarr/inference-wrapper/files/hindi/hindi.pt",
     "ta": "/home/nireshkumarr/inference-wrapper/files/tamil/final_model.pt",
     "bn": "/home/nireshkumarr/inference-wrapper/files/bengali/final_model.pt",
-    "ne": "/home/nireshkumarr/inference-wrapper/files/nepali/final_model.pt"
+    "ne": "/home/nireshkumarr/inference-wrapper/files/nepali/final_model.pt",
+    "kn": "/home/nireshkumarr/inference-wrapper/files/kannada/final_model.pt"
 }
