@@ -10,6 +10,7 @@ class ModelItem:
         self.lexicon_file_name = 'lexicon.lst'
         self.language_model_name = 'lm.binary'
         self.dict_file_name = 'dict.ltr.txt' 
+        self.punctuation_and_itn_enabled = False
 
     def get_model(self):
         return self.model
@@ -43,3 +44,9 @@ class ModelItem:
 
     def get_language_code(self):
         return self.language_code
+
+    def is_punctuation_and_itn_enabled(self):
+        return self.punctuation_and_itn_enabled
+
+    def set_is_punctuation_and_itn_enabled(self, value):
+        self.punctuation_and_itn_enabled = value

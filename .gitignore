@@ -158,3 +158,5 @@ denoiser/
 model_data/
 nohups/
 nohup.out
+utterances/
+*.wav

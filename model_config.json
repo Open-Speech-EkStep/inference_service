@@ -5,5 +5,6 @@
     "ta": "/home/nireshkumarr/inference-wrapper/files/tamil/final_model.pt",
     "bn": "/home/nireshkumarr/inference-wrapper/files/bengali/final_model.pt",
     "ne": "/home/nireshkumarr/inference-wrapper/files/nepali/final_model.pt",
-    "kn": "/home/nireshkumarr/inference-wrapper/files/kannada/final_model.pt"
+    "kn": "/home/nireshkumarr/inference-wrapper/files/kannada/final_model.pt",
+    "gu": "/home/nireshkumarr/inference-wrapper/files/gujarati/final_model.pt"
 }
