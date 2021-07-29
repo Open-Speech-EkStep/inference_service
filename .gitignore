@@ -160,3 +160,4 @@ nohups/
 nohup.out
 utterances/
 *.wav
+credentials.json

@@ -183,12 +183,13 @@
                     data: 'audio_path',
                     "searchable": false,
                     render: function (data, type, row) {
-                        return `<div>
+                        runModelBtn = `<div>
                                 <button type="button" class="btn btn-primary">Run model</button>
                                 <div class="loader" style='display: none;'></div>
                                 <p class='result'></p>
                                 </div>
                                 `
+                        return `<div>Run model</div>`
                     }
                 }
             ]
