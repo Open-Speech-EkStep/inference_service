@@ -669,7 +669,7 @@
         }
 
         function connectSocket(startMic) {
-            socket = io('/', {autoConnect: false });
+            socket = io('/', {autoConnect: false , query: `language=${current_lang}`});
             socket.connect();
             socket.on('connect', function () {
                 userId = socket.id;

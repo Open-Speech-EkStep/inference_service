@@ -19,6 +19,8 @@ app.use(express.static(path.join(__dirname, "static")));
 
 const MAX_SOCKET_CONNECTIONS = process.env.MAX_CONNECTIONS || 80;
 
+const ip_language_map = require("./ip_language_map.json");
+
 const { uploadFile } = require('./uploader');
 const PROTO_PATH =
     __dirname +
@@ -144,10 +146,16 @@ function startServer() {
     app.post("/batch-service", function(req,res){
         const file = req.file;
         const { language, user} = req.body;
-        console.log(file);
         let data = fs.readFileSync(file.path);
+        let grpc_ip;// = 'localhost:55102';
+        for(let ip in ip_language_map){
+            if(ip_language_map[ip].includes(language)){
+                grpc_ip = ip;
+                break;
+            }
+        }
         let grpc_client = new proto.Recognize(
-            'localhost:55102',
+            grpc_ip,
             grpc.credentials.createInsecure()
         );
         const msg = {
@@ -176,8 +184,15 @@ function startServer() {
 
     app.post("/punctuate", (req, res)=>{
         const {text, language } = req.body;
+        let grpc_ip;// = 'localhost:55102';
+        for(let ip in ip_language_map){
+            if(ip_language_map[ip].includes(language)){
+                grpc_ip = ip;
+                break;
+            }
+        }
         let grpc_client = new proto.Recognize(
-            'localhost:55102',
+            grpc_ip,
             grpc.credentials.createInsecure()
         );
         const msg = {
@@ -263,10 +278,15 @@ function startServer() {
 }
 
 function main() {
-
     io.on("connection", (socket) => {
+       let grpc_ip; //= 'localhost:55102';
+       for(let ip in language_server_map){
+           if(language_server_map[ip].includes(socket.handshake.query.language)){
+                grpc_ip = ip;
+           }
+       }
         let grpc_client = new proto.Recognize(
-            'localhost:55102',
+            grpc_ip,
             grpc.credentials.createInsecure()
         );
         socket.on("disconnect", (reason) => {
