@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, "static")));
 const MAX_SOCKET_CONNECTIONS = process.env.MAX_CONNECTIONS || 80;
 
 const ip_language_map = require("./ip_language_map.json");
+const LANGUAGES = require("./language_details.json");
+const language_ids = LANGUAGES.map(language=> language.id)
 
 const { uploadFile } = require('./uploader');
 const PROTO_PATH =
@@ -27,6 +29,8 @@ const PROTO_PATH =
     (process.env.PROTO_PATH || "/audio_to_text.proto");
 const protoLoader = require("@grpc/proto-loader");
 const { allowedNodeEnvironmentFlags } = require('process');
+
+app.set('view engine', 'ejs');
 
 let packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
@@ -111,45 +115,43 @@ function startServer() {
     });
 
     app.get("/feedback", function (req, res) {
-        res.sendFile("feedback.html", { root: __dirname });
+        res.sendFile("views/feedback.html", { root: __dirname });
     });
 
-    // const LANGUAGES = ['hindi', 'indian-english', 'tamil', 'telugu', 'kannada', 'kannada-lm', 'odia', 'gujarati'];
-    const LANGUAGES = ['hindi', 'indian-english','indian-english-bio','tamil', 'bengali', 'nepali','kannada','gujarati','telugu'];
     app.get("/:language", function (req, res) {
         const language = req.params.language;
-        if (LANGUAGES.includes(language.toLowerCase())) {
-            res.sendFile("index.html", { root: __dirname });
+        if (language_ids.includes(language.toLowerCase())) {
+            res.render("index", { root: __dirname, languages_map: LANGUAGES });
         } else {
-            res.sendFile("not-found.html", { root: __dirname });
+            res.render("not-found", { root: __dirname, languages_map: LANGUAGES });
         }
     });
 
-    const getSrtResponse =  (grpc_client, msg) => {
+    const getSrtResponse = (grpc_client, msg) => {
         return new Promise((resolve, reject) => {
             grpc_client.recognize_srt(msg, (error, response) => {
-                    if (error) { reject(error); }
-                    resolve(response);
-                });
-          });
+                if (error) { reject(error); }
+                resolve(response);
+            });
+        });
     }
 
-    const getPunctuation =  (grpc_client, msg) => {
+    const getPunctuation = (grpc_client, msg) => {
         return new Promise((resolve, reject) => {
             grpc_client.punctuate(msg, (error, response) => {
-                    if (error) { reject(error); }
-                    resolve(response);
-                });
-          });
+                if (error) { reject(error); }
+                resolve(response);
+            });
+        });
     }
 
-    app.post("/batch-service", function(req,res){
+    app.post("/batch-service", function (req, res) {
         const file = req.file;
-        const { language, user} = req.body;
+        const { language, user } = req.body;
         let data = fs.readFileSync(file.path);
-        let grpc_ip;// = 'localhost:55102';
-        for(let ip in ip_language_map){
-            if(ip_language_map[ip].includes(language)){
+        let grpc_ip = 'localhost:55102';
+        for (let ip in ip_language_map) {
+            if (ip_language_map[ip].includes(language)) {
                 grpc_ip = ip;
                 break;
             }
@@ -164,12 +166,12 @@ function startServer() {
             language: language,
             filename: file.filename
         };
-        getSrtResponse(grpc_client, msg).then(response=>{
-            res.json({"data": response});
-        }).catch(error=>{
+        getSrtResponse(grpc_client, msg).then(response => {
+            res.json({ "data": response });
+        }).catch(error => {
             console.log(error);
             res.sendStatus(500);
-        }).finally(()=>{
+        }).finally(() => {
             grpc.closeClient(grpc_client);
             fs.unlink(file.path, function (err) {
                 if (err) {
@@ -182,11 +184,11 @@ function startServer() {
         })
     });
 
-    app.post("/punctuate", (req, res)=>{
-        const {text, language } = req.body;
+    app.post("/punctuate", (req, res) => {
+        const { text, language } = req.body;
         let grpc_ip;// = 'localhost:55102';
-        for(let ip in ip_language_map){
-            if(ip_language_map[ip].includes(language)){
+        for (let ip in ip_language_map) {
+            if (ip_language_map[ip].includes(language)) {
                 grpc_ip = ip;
                 break;
             }
@@ -200,12 +202,12 @@ function startServer() {
             language: language,
             enabledItn: true
         }
-        getPunctuation(grpc_client, msg).then(response=>{
-            res.json({"data": response});
-        }).catch(error=>{
+        getPunctuation(grpc_client, msg).then(response => {
+            res.json({ "data": response });
+        }).catch(error => {
             console.log(error);
             res.sendStatus(500);
-        }).finally(()=>{
+        }).finally(() => {
             grpc.closeClient(grpc_client);
         })
     })
@@ -255,6 +257,7 @@ function startServer() {
                 "data": result['data']
             })
         }).catch(err => {
+            console.log(err);
             if (err.name && err.name == 'QueryResultError') {
                 res.json({
                     "draw": req.query.draw | 1,
@@ -279,12 +282,12 @@ function startServer() {
 
 function main() {
     io.on("connection", (socket) => {
-       let grpc_ip; //= 'localhost:55102';
-       for(let ip in ip_language_map){
-           if(ip_language_map[ip].includes(socket.handshake.query.language)){
+        let grpc_ip; //= 'localhost:55102';
+        for (let ip in ip_language_map) {
+            if (ip_language_map[ip].includes(socket.handshake.query.language)) {
                 grpc_ip = ip;
-           }
-       }
+            }
+        }
         let grpc_client = new proto.Recognize(
             grpc_ip,
             grpc.credentials.createInsecure()

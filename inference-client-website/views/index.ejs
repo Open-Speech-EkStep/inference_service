@@ -216,43 +216,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
-        <a href="https://vakyansh.in">
-            <img src="ekstep-logo.svg" style="width:3rem" alt="Ek Step Logo">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item p-2 dropdown"><a href="/"
-                        class="nav-link text-dark font-weight-bold dropdown-toggle" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Speech
-                        Recognition Models </a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/indian-english">English (IN)</a>
-                        <a class="dropdown-item" href="/indian-english-bio">BIO English (IN)</a>
-                        <a class="dropdown-item" href="/hindi">Hindi</a>
-                        <a class="dropdown-item" href="/tamil">Tamil</a>
-                        <a class="dropdown-item" href="/bengali">Bengali</a>
-                        <a class="dropdown-item" href="/nepali">Nepali</a>
-                        <a class="dropdown-item" href="/kannada">Kannada</a>
-                        <a class="dropdown-item" href="/gujarati">Gujarati</a>
-			<a class="dropdown-item" href="/telugu">Telugu</a>
-
-                    </div>
-                </li>
-                <li class="nav-item p-2"><a href="https://vakyansh.in/about-us"
-                        class="nav-link text-dark font-weight-bold">About Us</a>
-                </li>
-                <li class="nav-item p-2"><a href="https://vakyansh.in/"
-                        class="nav-link text-dark font-weight-bold">Vakyansh</a></li>
-                <li class="nav-item p-2"><a class="nav-link text-dark font-weight-bold d-none" id="nav-user"><span
-                            class="material-icons align-middle mx-1">account_circle</span> <span
-                            id="nav-username"></span></a></li>
-            </ul>
-        </div>
-    </nav>
+    <%- include('./components/header'); %>
     <center>
         <div class="container">
             <div class="row" style="border: 0px;">
@@ -400,6 +364,8 @@
         /*
             init variables
         */
+        let ENABLE_LOGS = false;
+        let languagesMap = <%- JSON.stringify(languages_map) %>;
         let socket, socket_close_timeout = null, fileSocket, micSocketIO, fileSocketIO;
         let current_lang = 'en-IN', selected_lang = 'en-IN';
         let bufferSize = 16384;
@@ -421,46 +387,14 @@
         */
         function fetchCurrentLanguageCode(language) {
             language = language.toLowerCase();
-            // if (language === "kannada") {
-            //     return "kn";
-            // } else
-            if (language === "indian-english") {
-                return "en-IN";
+            let languageCode = "en-IN";
+            for(let ind in languagesMap){
+                if(languagesMap[ind].id === language){
+                    languageCode = languagesMap[ind].code;
+                    break;
+                }
             }
-            else if (language === "indian-english-bio") {
-                return "en-IN-BIO";
-            }
-             else if (language === "hindi") {
-                return "hi";
-            } 
-            else if (language === "tamil") {
-                return "ta";
-            }
-            else if (language === "bengali"){
-                return "bn";
-            }
-            else if (language === "nepali"){
-                return "ne";
-            }
-            else if (language === "kannada") {
-                return "kn";
-            }
-            else if (language === "gujarati") {
-                return "gu";
-            }
-            else if (language === "telugu") {
-                return "te";
-            }
-            // } else if (language === "gujarati") {
-            //     return "gu";
-            // } else if (language === "kannada-lm") {
-            //     return "kn-lm";
-            // } else if (language === "odia") {
-            //     return "or";
-            // }
-            else {
-                return "en-IN";
-            }
+            return languageCode;
         }
 
         function toCamelCase(word) {
@@ -653,21 +587,25 @@
                 fileSocket.emit('connect_file_stream');
             });
             fileSocket.on('connect-success', function (data) {
-                console.log("connect-success", userId);
+                if(ENABLE_LOGS === true)
+                    console.log("connect-success", userId);
                 methodToRun();
                 document.getElementById('userid').innerHTML = "";
             });
             fileSocket.on("file_upload_response", function (transcription, language) {
-                console.log("response received");
+                if(ENABLE_LOGS === true)
+                    console.log("response received");
                 document.getElementById("file_upload_response").innerHTML = transcription;
                 // fileSocket.disconnect();
                 $('#file-loader').hide();
             });
             fileSocket.on("disconnect", function () {
-                console.log("File socket is disconnected");
+                if(ENABLE_LOGS === true)
+                    console.log("File socket is disconnected");
             });
             fileSocket.on("error", (err) => {
-                console.log("file error", err);
+                if(ENABLE_LOGS === true)
+                    console.log("file error", err);
             })
         }
 
@@ -679,7 +617,8 @@
                 socket.emit('connect_mic_stream');
             });
             socket.on('connect-success', function (data) {
-                console.log("connect-success", userId);
+                if(ENABLE_LOGS === true)
+                    console.log("connect-success", userId);
                 startMic();
                 document.getElementById('userid').innerHTML = "";
             });
@@ -690,12 +629,14 @@
                 transcription_language = language;
             });
             socket.on('disconnect', function () {
-                console.log("disconnected");
+                if(ENABLE_LOGS === true)
+                    console.log("disconnected");
             })
             socket.on('terminate', function () {
                 if (socket_close_timeout === null) {
                     endSocket();
-                    console.log("end socket called");
+                    if(ENABLE_LOGS === true)
+                        console.log("end socket called");
                 }
             });
 
@@ -771,7 +712,8 @@
                 toggle();
             } catch (err) {
                 alert("Please give mic permission to interact with the website");
-                console.log(err);
+                if(ENABLE_LOGS === true)
+                    console.log(err);
             }
         }
 
@@ -862,7 +804,8 @@
                     // let data_16000 = data_44100;
                     state_end = true;
                     socket.emit('mic_data', data_16000, current_lang, false, true);
-                    console.log("emitted last");
+                    if(ENABLE_LOGS === true)
+                        console.log("emitted last");
                 }
             }
         };
@@ -920,7 +863,8 @@
             let finalBuffer = flattenArray(audioData, recordingLength);
             let blob = generateWavBlob(finalBuffer);
             if (blob == null) {
-                console.log("no blob generated");
+                if(ENABLE_LOGS === true)
+                    console.log("no blob generated");
                 return;
             }
             recordedBlob = blob;
@@ -955,7 +899,8 @@
             // }
             // let fileNameSplit = file.name.split(".");
             // if()
-            console.log(file);
+            if(ENABLE_LOGS === true)
+                console.log(file);
             let URL_OBJECT = window.URL || window.webkitURL;
             let url = URL_OBJECT.createObjectURL(file);
             document.getElementById("audio_source").src = url;
@@ -999,7 +944,8 @@
                 let reader = new FileReader();
                 reader.addEventListener('load', function (e) {
                     let chunk = e.target.result;
-                    console.log("emitted file", chunk);
+                    if(ENABLE_LOGS === true)    
+                        console.log("emitted file", chunk);
                     let inpStream = ss.createStream({ highWaterMark: 3500000 });
                     ss(fileSocket).emit('file_data', inpStream, current_lang, file.name);
                     ss.createBlobReadStream(chunk).pipe(inpStream);
@@ -1007,7 +953,8 @@
                 reader.readAsArrayBuffer(blob);
                 offset += chunk_size;
                 i += chunk_size;
-                console.log("read");
+                if(ENABLE_LOGS === true)
+                    console.log("read");
             }
         }
 
@@ -1107,7 +1054,8 @@
                 },
                 success: function (response, textStatus, jqXHR) {
                     const resp = response["data"];
-                    console.log(resp['text']);
+                    if(ENABLE_LOGS === true)
+                        console.log(resp['text']);
                     $('#output-loader-icon').hide();
                     document.getElementById('output').textContent = resp["text"];
                 },
@@ -1159,7 +1107,8 @@
             });
             enableRating(false);
             $('input[type=radio][name=star]').change(function () {
-                console.log($(this).val())
+                if(ENABLE_LOGS === true)
+                    console.log($(this).val())
                 if ($(this).val() >= 1) {
                     $('select').prop("disabled", false)
                     $('#Submit').attr("disabled", false)

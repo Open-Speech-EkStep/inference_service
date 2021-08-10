@@ -12,36 +12,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light px-4"><a href="https://vakyansh.in"><img src="ekstep-logo.svg"
-                style="width:3rem" alt="Ek Step Logo"> </a><button class="navbar-toggler" type="button"
-            data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item p-2 dropdown">
-                    <div href="/"
-                        class="nav-link text-dark font-weight-bold dropdown-toggle" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Speech Recognition Models
-                    </div>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/indian-english">English (IN)</a>
-                        <a class="dropdown-item" href="/indian-english-bio">BIO English (IN)</a>
-                        <a class="dropdown-item" href="/hindi">Hindi</a>
-                        <a class="dropdown-item" href="/tamil">Tamil</a>
-                        <a class="dropdown-item" href="/bengali">Bengali</a>
-                        <a class="dropdown-item" href="/nepali">Nepali</a>
-                        <a class="dropdown-item" href="/kannada">Kannada</a>
-                        <a class="dropdown-item" href="/gujarati">Gujarati</a>
-                    </div>
-                </li>
-                <li class="nav-item p-2"><a href="https://vakyansh.in/about-us" class="nav-link text-dark font-weight-bold">About Us</a>
-                </li>
-                <li class="nav-item p-2"><a class="nav-link text-dark font-weight-bold d-none" id="nav-user"><span
-                            class="material-icons align-middle mx-1">account_circle</span> <span
-                            id="nav-username"></span></a></li>
-            </ul>
-        </div>
-    </nav>
+    <%- include('./components/header'); %>
     <div class="container my-5 p-5">
         <div class="row justify-content-center">
             <div class="col-sm-10 text-center">

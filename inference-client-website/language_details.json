@@ -1,0 +1,11 @@
+[
+    {"id": "indian-english", "code": "en-IN", "name": "English (IN)"},
+    {"id": "indian-english-bio", "code": "en-IN-BIO", "name":"BIO English (IN)"},
+    {"id":"hindi", "code": "hi", "name":"Hindi"},
+    {"id": "tamil", "code": "ta", "name": "Tamil"}, 
+    {"id": "bengali", "code": "bn", "name": "Bengali"}, 
+    {"id":"nepali", "code": "ne", "name": "Nepali"}, 
+    {"id": "kannada", "code": "kn", "name": "Kannada"}, 
+    {"id": "gujarati", "code": "gu", "name": "Gujarati"}, 
+    {"id": "telugu", "code": "te", "name": "Telugu"} 
+]
