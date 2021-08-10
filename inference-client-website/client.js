@@ -115,7 +115,7 @@ function startServer() {
     });
 
     // const LANGUAGES = ['hindi', 'indian-english', 'tamil', 'telugu', 'kannada', 'kannada-lm', 'odia', 'gujarati'];
-    const LANGUAGES = ['hindi', 'indian-english','indian-english-bio','tamil', 'bengali', 'nepali','kannada','gujarati'];
+    const LANGUAGES = ['hindi', 'indian-english','indian-english-bio','tamil', 'bengali', 'nepali','kannada','gujarati','telugu'];
     app.get("/:language", function (req, res) {
         const language = req.params.language;
         if (LANGUAGES.includes(language.toLowerCase())) {
@@ -280,8 +280,8 @@ function startServer() {
 function main() {
     io.on("connection", (socket) => {
        let grpc_ip; //= 'localhost:55102';
-       for(let ip in language_server_map){
-           if(language_server_map[ip].includes(socket.handshake.query.language)){
+       for(let ip in ip_language_map){
+           if(ip_language_map[ip].includes(socket.handshake.query.language)){
                 grpc_ip = ip;
            }
        }
