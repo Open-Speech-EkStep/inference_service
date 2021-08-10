@@ -8,7 +8,7 @@ sudo apt install build-essential cmake libboost-system-dev libboost-thread-dev l
 
 pip install packaging soundfile swifter
 pip install -r requirements.txt
-
+touch model_config.json
 cd /opt
 sudo mkdir wav2vec
 sudo chmod 777 -R wav2vec
