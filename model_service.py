@@ -1,11 +1,12 @@
 import json
 
 from inverse_text_normalization.run_predict import inverse_normalize_text
-from lib.inference_lib import load_model_and_generator, get_results
-from model_item import ModelItem
 from punctuate.punctuate_text import Punctuation
 from srt.infer import response_alignment
 from srt.subtitle_generator import get_srt
+
+from lib.inference_lib import load_model_and_generator, get_results
+from model_item import ModelItem
 
 
 class ModelService:
@@ -25,7 +26,7 @@ class ModelService:
             if language_code in ['en-IN', 'en-IN-BIO']:
                 model_item.set_is_punctuation_and_itn_enabled(True)
                 model_item.set_punctuation_model(Punctuation('en'))
-            elif language_code == 'hi':
+            elif language_code in ['hi', 'gu', 'te']:
                 model_item.set_is_punctuation_and_itn_enabled(True)
                 model_item.set_punctuation_model(Punctuation(language_code))
             else:
@@ -100,8 +101,6 @@ class ModelService:
 
 
 if __name__ == "__main__":
-    from lib.inference_lib import Wav2VecCtc
-
     with open('model_config.json', 'r') as f:
         model_config = json.load(f)
     model_service = ModelService(model_config, 'kenlm', True, True)
