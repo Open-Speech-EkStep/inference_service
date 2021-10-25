@@ -26,7 +26,7 @@ class ModelService:
             if language_code in ['en-IN', 'en-IN-BIO']:
                 model_item.set_is_punctuation_and_itn_enabled(True)
                 model_item.set_punctuation_model(Punctuation('en'))
-            elif language_code in ['hi', 'gu', 'te']:
+            elif language_code in ['hi', 'gu', 'te', 'mr']:
                 model_item.set_is_punctuation_and_itn_enabled(True)
                 model_item.set_punctuation_model(Punctuation(language_code))
             else:
