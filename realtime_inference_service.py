@@ -1,4 +1,5 @@
 import json
+import log_setup
 import os
 import wave
 from concurrent import futures
@@ -10,24 +11,29 @@ from grpc_stubs.audio_to_text_pb2_grpc import add_RecognizeServicer_to_server, R
 from model_service import ModelService
 from lib.inference_lib import Wav2VecCtc
 
+LOGGER = log_setup.get_logger('realtime-inferencing')
+
 class RecognizeAudioServicer(RecognizeServicer):
     def __init__(self):
         cwd = os.getcwd()
+        LOGGER.info('Initializing realtime inference')
         if not os.path.exists(cwd+"/utterances"):
             os.system('mkdir utterances')
         with open('model_config.json','r') as f:
             model_config = json.load(f)
         self.inference = ModelService(model_config, 'kenlm', True, False)
-        print('Model Loaded Successfully')
+        LOGGER.info('Model Loaded Successfully')
         self.count = 0
         self.file_count = 0
         self.client_buffers = {}
         self.client_transcription = {}
 
+    # Streaming handler
     def recognize_audio(self, request_iterator, context):
         for data in request_iterator:
             self.count += 1
-            print(data.user, "received", data.isEnd)
+            LOGGER.debug("Received for user %s data.isEnd: %s  Buffer size: %s ", data.user, data.isEnd,
+                         len(self.client_buffers))
             if data.isEnd:
                 self.disconnect(data.user)
                 result = {}
@@ -44,7 +50,7 @@ class RecognizeAudioServicer(RecognizeServicer):
     def recognize_audio_file_mode(self, request_iterator, context):
         for request in request_iterator:
             self.file_count += 1
-            print("Received", request.filename)
+            LOGGER.info("Received", request.filename)
             transcription = self.transcribe_file(request.audio, str(self.file_count), request.user, request.language, request.filename)
             yield Response(transcription=transcription, user=request.user, action="",
                         language=request.language)
@@ -75,10 +81,10 @@ class RecognizeAudioServicer(RecognizeServicer):
 
     def disconnect(self, user):
         self.clear_states(user)
-        print("Disconnect",str(user))
+        LOGGER.info("Disconnecting user %s", str(user))
 
     def preprocess(self, data):
-        local_file_name = None
+        # local_file_name = None
         append_result = False
         if data.user in self.client_buffers:
             self.client_buffers[data.user] += data.audio
@@ -86,7 +92,7 @@ class RecognizeAudioServicer(RecognizeServicer):
             self.client_buffers[data.user] = data.audio
 
         buffer = self.client_buffers[data.user]
-        # print("when", len(buffer))
+        LOGGER.debug("Buffer length is %s for user %s", len(buffer), data.user)
         if not data.speaking:
             del self.client_buffers[data.user]
             append_result = True
@@ -124,7 +130,7 @@ class RecognizeAudioServicer(RecognizeServicer):
                 with open(local_file_name.replace(".wav",".txt"), 'w') as local_file:
                     local_file.write(result['transcription'])
         result["id"] = index
-        print(user, "responsed")
+        LOGGER.debug("Responded for user %s transcription: %s", user, transcription)
 
         os.remove(file_name)
 
@@ -141,7 +147,7 @@ class RecognizeAudioServicer(RecognizeServicer):
         subprocess.call(['ffmpeg -i {} -ar 16000 -ac 1 -bits_per_raw_sample 16 -vn {}'.format(input_file_name, output_file_name)],shell=True)
         result = self.inference.get_inference(output_file_name, language, False, False)
         result["id"] = index
-        print("responsed", input_file_name)
+        LOGGER.info("responded for input file %s", input_file_name)
         os.remove(input_file_name)
         os.remove(output_file_name)
         if result['status'] != "OK":
@@ -160,7 +166,7 @@ def serve():
     add_RecognizeServicer_to_server(RecognizeAudioServicer(), server)
     server.add_insecure_port('[::]:%d' % port)
     server.start()
-    print("GRPC Server! Listening in port %d" % port)
+    LOGGER.info("GRPC Server! Listening in port %d" % port)
     server.wait_for_termination()
 
 
