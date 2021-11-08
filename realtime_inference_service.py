@@ -92,12 +92,12 @@ class RecognizeAudioServicer(RecognizeServicer):
             self.client_buffers[data.user] = data.audio
 
         buffer = self.client_buffers[data.user]
-        LOGGER.debug("Buffer length is %s for user %s", len(buffer), data.user)
         if not data.speaking:
             del self.client_buffers[data.user]
             append_result = True
             # local_file_name = "utterances/{}__{}__{}.wav".format(data.user,str(int(time.time()*1000)), data.language)
             # self.write_wave_to_file(local_file_name, buffer)
+        LOGGER.debug("Buffer length is %s for user %s is speaking %s", len(buffer), data.user, data.speaking)
         return buffer, append_result, None
 
     def write_wave_to_file(self, file_name, audio):
