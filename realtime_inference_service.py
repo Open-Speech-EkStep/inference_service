@@ -35,6 +35,10 @@ class RecognizeAudioServicer(RecognizeServicer):
             LOGGER.debug("Received for user %s data.isEnd: %s  Buffer size: %s ", data.user, data.isEnd,
                          len(self.client_buffers))
             if data.isEnd:
+                if len(self.client_buffers[data.user]) > 0:
+                    transcription = self.transcribe(self.client_buffers[data.user], str(self.count), data, True, "")
+                    yield Response(transcription=transcription, user=data.user, action='True',
+                                   language=data.language)
                 self.disconnect(data.user)
                 result = {}
                 result["id"] = self.count
@@ -43,9 +47,10 @@ class RecognizeAudioServicer(RecognizeServicer):
                            language=data.language)
             else:
                 buffer, append_result, local_file_name = self.preprocess(data)
-                transcription = self.transcribe(buffer, str(self.count), data, append_result, local_file_name)
-                yield Response(transcription=transcription, user=data.user, action=str(append_result),
-                            language=data.language)
+                if append_result:
+                    transcription = self.transcribe(buffer, str(self.count), data, append_result, local_file_name)
+                    yield Response(transcription=transcription, user=data.user, action=str(append_result),
+                                language=data.language)
 
     def recognize_audio_file_mode(self, request_iterator, context):
         for request in request_iterator:
