@@ -35,10 +35,10 @@ class RecognizeAudioServicer(RecognizeServicer):
             LOGGER.debug("Received for user %s data.isEnd: %s  Buffer size: %s ", data.user, data.isEnd,
                          len(self.client_buffers))
             if data.isEnd:
-                if len(self.client_buffers[data.user]) > 0:
-                    transcription = self.transcribe(self.client_buffers[data.user], str(self.count), data, True, "")
-                    yield Response(transcription=transcription, user=data.user, action='True',
-                                   language=data.language)
+                #if len(self.client_buffers[data.user]) > 0:
+                #    transcription = self.transcribe(self.client_buffers[data.user], str(self.count), data, True, "")
+                #    yield Response(transcription=transcription, user=data.user, action='True',
+                #                   language=data.language)
                 self.disconnect(data.user)
                 result = {}
                 result["id"] = self.count
@@ -47,7 +47,7 @@ class RecognizeAudioServicer(RecognizeServicer):
                            language=data.language)
             else:
                 buffer, append_result, local_file_name = self.preprocess(data)
-                if append_result:
+                if append_result and buffer is not None:
                     transcription = self.transcribe(buffer, str(self.count), data, append_result, local_file_name)
                     yield Response(transcription=transcription, user=data.user, action=str(append_result),
                                 language=data.language)
@@ -91,18 +91,21 @@ class RecognizeAudioServicer(RecognizeServicer):
     def preprocess(self, data):
         # local_file_name = None
         append_result = False
-        if data.user in self.client_buffers:
-            self.client_buffers[data.user] += data.audio
-        else:
-            self.client_buffers[data.user] = data.audio
+        if data.audio is not None and len(data.audio) > 0:
+           LOGGER.debug("Audio length: %s, speaking: %s",len(data.audio), data.speaking)
+           if data.user in self.client_buffers:
+            	self.client_buffers[data.user] += data.audio
+           else:
+                self.client_buffers[data.user] = data.audio
 
-        buffer = self.client_buffers[data.user]
+        buffer = self.client_buffers[data.user] if data.user in self.client_buffers else None
         if not data.speaking:
-            del self.client_buffers[data.user]
+            self.clear_buffers(data.user)
+            #del self.client_buffers[data.user]
             append_result = True
             # local_file_name = "utterances/{}__{}__{}.wav".format(data.user,str(int(time.time()*1000)), data.language)
             # self.write_wave_to_file(local_file_name, buffer)
-        LOGGER.debug("Buffer length is %s for user %s is speaking %s", len(buffer), data.user, data.speaking)
+        LOGGER.debug("Buffer length is %s for user %s is speaking %s", len(buffer) if buffer is not None else 0, data.user, data.speaking)
         return buffer, append_result, None
 
     def write_wave_to_file(self, file_name, audio):
